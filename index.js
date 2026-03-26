@@ -28,5 +28,11 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 
+// Shortcuts for manual testing
+app.use('/products', productRoutes);
+app.use('/auth', authRoutes);
+app.use('/orders', orderRoutes);
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
