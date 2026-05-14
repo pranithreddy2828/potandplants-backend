@@ -47,6 +47,37 @@ router.post('/', [authMiddleware, adminMiddleware, upload.single('image')], asyn
   }
 });
 
+// Update product (Admin only)
+router.put('/:id', [authMiddleware, adminMiddleware, upload.single('image')], async (req, res) => {
+  const { name, price, description, care_instructions, category_id, is_featured, is_best_seller, stock } = req.body;
+  
+  try {
+    let product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ msg: 'Product not found' });
+
+    const updateData = {
+      name,
+      price,
+      description,
+      care_instructions,
+      category_id,
+      is_featured,
+      is_best_seller,
+      stock
+    };
+
+    if (req.file) {
+      updateData.image_filename = req.file.path;
+    }
+
+    product = await Product.findByIdAndUpdate(req.params.id, { $set: updateData }, { new: true });
+    res.json(product);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
 // Delete product (Admin only)
 router.delete('/:id', [authMiddleware, adminMiddleware], async (req, res) => {
   try {
